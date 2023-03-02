@@ -11,14 +11,17 @@ app = Flask(__name__)
 API_ENDPOINT = "https://api.openai.com/v1/images/generations"
 API_KEY = "YOUR_API_KEY"
 
+
 @app.route('/generate-image', methods=['POST'])
 def generate_image():
-    # Get the parameters from the request
-    data = request.get_json()
-    prompt = data['prompt']
-    model = data['model']
-    size = data['size']
-    
+    # Get the user's text input from the request
+    user_input = request.json.get('text')
+
+    # Set the text prompt and model parameters
+    prompt = f"3D model of a equirectangular panorama. {user_input}"
+    model = "image-alpha-001"
+    size = "1024x1024"
+
     # Send the API request to generate the image
     response = requests.post(
         API_ENDPOINT,
@@ -66,14 +69,21 @@ def generate_image():
         # Combine the left and right sides of the image
         combined_inpaint = np.concatenate((left_inpaint, right_inpaint), axis=1)
 
-        # Convert the combined image back to a Pillow Image object
+        # Convert the combined image to a Pillow Image object
         combined_image = Image.fromarray(combined_inpaint)
 
-        # Save the combined image to a buffer and return it as a response
-        image_buffer = BytesIO()
-        combined_image.save(image_buffer, format='PNG')
-        image_buffer.seek(0)
-        return jsonify({'image': image_buffer.read().decode('latin1')})
+        # Convert the Pillow Image object to bytes
+        img_bytes = BytesIO()
+        combined_image.save(img_bytes, format='PNG')
+        img_bytes = img_bytes.getvalue()
+
+        # Return the combined image as a response
+        return jsonify({'image': str(img_bytes)})
+
     else:
         # Return the error message if the request failed
-        return jsonify({'error': response.text}), response.status_code
+        return jsonify({'error': response.text})
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
