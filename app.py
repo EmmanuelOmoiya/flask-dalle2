@@ -76,6 +76,15 @@ def generate_image():
         img_bytes = BytesIO()
         combined_image.save(img_bytes, format='PNG')
         img_bytes = img_bytes.getvalue()
+        # Display the combined image using Pillow
+        combined_image = Image.fromarray(combined_inpaint)
+        combined_image.show()
+
+        # Set the filename based on the user input
+        filename = f"combined_image-{user_input}.png"
+
+        # Save the combined image to a file using Pillow
+        combined_image.save(filename)
 
         # Return the combined image as a response
         return jsonify({'image': str(img_bytes)})
