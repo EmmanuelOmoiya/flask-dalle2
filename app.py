@@ -11,6 +11,7 @@ import imgbbpy
 import openai
 import os
 import datetime
+from flask_cors import CORS
 
 #os.environ['IMGBB_API_KEY'] = 'xx'
 #os.environ['OPENAI_API_KEY'] = 'xx'
@@ -18,6 +19,7 @@ import datetime
 
 
 app = Flask(__name__)
+CORS(app)
 load_dotenv()
 # Set the OpenAI API endpoint and your API key
 API_ENDPOINT = "https://api.openai.com/v1/images/generations"
