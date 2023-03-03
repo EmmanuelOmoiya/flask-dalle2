@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 # Set the OpenAI API endpoint and your API key
 API_ENDPOINT = "https://api.openai.com/v1/images/generations"
-API_KEY = "YOUR_API_KEY"
+API_KEY = "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"
 
 
 @app.route('/generate-image', methods=['POST'])
@@ -79,13 +79,14 @@ def generate_image():
         # Display the combined image using Pillow
         combined_image = Image.fromarray(combined_inpaint)
         combined_image.show()
-
+        temp = user_input.replace(" ","")
         # Set the filename based on the user input
-        filename = f"combined_image-{user_input}.png"
+        filename = f"combined_image-{temp}.png"
 
         # Save the combined image to a file using Pillow
         combined_image.save(filename)
 
+               
         # Return the combined image as a response
         return jsonify({'image': str(img_bytes)})
 
@@ -93,6 +94,9 @@ def generate_image():
         # Return the error message if the request failed
         return jsonify({'error': response.text})
 
+    res = requests.get(f"http://localhost:3000/upload?file={filename}")
+    if res.status_code == 200:
+        return res.text
 
 if __name__ == '__main__':
     app.run(debug=True)
