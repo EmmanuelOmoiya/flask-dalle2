@@ -7,6 +7,10 @@ import cv2
 import openai
 import os
 
+os.environ['OPENAI_API_KEY'] = 'xxx'
+#openai.organization = "Personal"
+openai.api_key = 'xx'
+
 app = Flask(__name__)
 
 # Set the OpenAI API endpoint and your API key
@@ -151,6 +155,16 @@ def outpaint_image():
     second_part = cv2.cvtColor(second_part, cv2.COLOR_RGB2RGBA)
     final_image = np.concatenate((pre_chunk,second_part),axis=1)
     cv2.imwrite('output.png',final_image)
+
+
+
+
+    ## Merging the image at the end.
+
+    final_image = cv2.imread('output.png')
+    second_part = cv2.cvtColor(final_image, cv2.COLOR_RGB2RGBA)
+
+
 
 
     # Convert the Pillow Image object to bytes
