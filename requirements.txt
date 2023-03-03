@@ -2,4 +2,5 @@ requests
 pillow
 opencv-python 
 numpy 
-io
+openai
+flask
