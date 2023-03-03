@@ -45,6 +45,11 @@ twisted = "==21.2.0"
 w3lib = "==1.22.0"
 "zope.interface" = "==5.4.0"
 opencv-python = "*"
+flask = "*"
+requests = "*"
+pillow = "*"
+python-dotenv = "*"
+imgbbpy = "*"
 
 [dev-packages]
 

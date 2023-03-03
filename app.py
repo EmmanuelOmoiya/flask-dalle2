@@ -4,13 +4,22 @@ from PIL import Image
 from io import BytesIO
 import numpy as np
 import cv2
+from dotenv import load_dotenv
+import os
+import asyncio
+import imgbbpy
 
 app = Flask(__name__)
-
+load_dotenv()
 # Set the OpenAI API endpoint and your API key
 API_ENDPOINT = "https://api.openai.com/v1/images/generations"
-API_KEY = "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"
+API_KEY = os.getenv('APIKEY')
 
+async def upload(pic):
+    client = imgbbpy.AsyncClient(os.getenv('IMGBB_API_KEY'))
+    image = await client.upload(file=pic)
+    print(image.url)
+    return image.url
 
 @app.route('/generate-image', methods=['POST'])
 def generate_image():
@@ -85,18 +94,16 @@ def generate_image():
 
         # Save the combined image to a file using Pillow
         combined_image.save(filename)
-
-               
+        url = asyncio.run(upload(filename))  
         # Return the combined image as a response
-        return jsonify({'image': str(img_bytes)})
+        #return jsonify({'image': str(img_bytes)})
+        return jsonify({'url': url})
 
     else:
         # Return the error message if the request failed
         return jsonify({'error': response.text})
-
-    res = requests.get(f"http://localhost:3000/upload?file={filename}")
-    if res.status_code == 200:
-        return res.text
+    
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
