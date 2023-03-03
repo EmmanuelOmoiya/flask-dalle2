@@ -10,10 +10,13 @@ import asyncio
 import imgbbpy
 import openai
 import os
+import datetime
 
-os.environ['OPENAI_API_KEY'] = 'xxx'
+os.environ['IMGBB_API_KEY'] = 'xx'
+os.environ['OPENAI_API_KEY'] = 'xx'
 #openai.organization = "Personal"
 openai.api_key = 'xx'
+
 
 app = Flask(__name__)
 load_dotenv()
@@ -27,10 +30,10 @@ async def upload(pic):
     print(image.url)
     return image.url
 
-@app.route('/outpaint-image', methods=['GET'])
+@app.route('/generate-image', methods=['POST'])
 def outpaint_image():
     # Get the user's text input from the request
-    user_input = request.args.get('text')
+    user_input = request.json.get('text')
     response = openai.Image.create(
         prompt=user_input,
         n=1,
@@ -125,9 +128,6 @@ def outpaint_image():
     final_image = np.concatenate((pre_chunk,second_part),axis=1)
     cv2.imwrite('outpaint2.png',final_image)
 
-
-
-
     ### Staring Thid Transformation
 
 
@@ -197,21 +197,27 @@ def outpaint_image():
     filled_masked = masked_image[:,377:724,]
 
     final_image = np.hstack((filled_masked, final_image))
-    cv2.imwrite('output2.png',final_image)
 
+    temp = user_input.replace(" ","")
+    # Set the filename based on the user input
+    filename = f"combined_image-{temp}.png"
+    
 
+    dt_now = datetime.datetime.now()
+    date_time_str = dt_now.strftime("%Y-%m-%d %H:%M:%S:%s")
+    date_time_str = date_time_str.replace('-','')
+    date_time_str = date_time_str.replace(':','')
+    date_time_str = date_time_str.replace(' ','')
+    date_time_str = date_time_str+'.png'
+    cv2.imwrite(date_time_str,final_image)
 
-
-    # Convert the Pillow Image object to bytes
-    combined_image = Image.fromarray(final_image)
-    img_bytes = BytesIO()
-    combined_image.save(img_bytes, format='PNG')
-    img_bytes = img_bytes.getvalue()
-            
+    url = asyncio.run(upload(date_time_str))  
     # Return the combined image as a response
-    return jsonify({'image': str(img_bytes)})
+    #return jsonify({'image': str(img_bytes)})
+    return jsonify({'url': url})
 
-@app.route('/generate-image', methods=['POST'])
+
+@app.route('/generate-image-old', methods=['POST'])
 def generate_image():
     # Get the user's text input from the request
     user_input = request.json.get('text')
