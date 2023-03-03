@@ -157,12 +157,38 @@ def outpaint_image():
     cv2.imwrite('output.png',final_image)
 
 
-
-
     ## Merging the image at the end.
 
     final_image = cv2.imread('output.png')
-    second_part = cv2.cvtColor(final_image, cv2.COLOR_RGB2RGBA)
+    final_image = cv2.cvtColor(final_image, cv2.COLOR_RGB2RGBA)
+
+    initial_part = final_image[:,0:300,]  
+    last_part = final_image[:,1500:1877,]
+    mid_mask = np.zeros((1024,347,4))
+
+    stiched_image = np.hstack((last_part,mid_mask,initial_part))
+    cv2.imwrite('partial.png',stiched_image)
+
+    response = openai.Image.create_edit(
+        image=open("partial.png", "rb"),
+        mask=open("partial.png", "rb"),
+        prompt=user_input,
+        n=1,
+        size="1024x1024"
+    )
+    image_url = response['data'][0]['url']
+
+    # Downloading image
+    image_req = requests.get(image_url)
+
+    open("4.png", "wb").write(image_req.content)
+
+    masked_image = cv2.imread('4.png')
+    masked_image = cv2.cvtColor(masked_image, cv2.COLOR_RGB2RGBA)
+    filled_masked = masked_image[:,377:724,]
+
+    final_image = np.hstack((filled_masked, final_image))
+    cv2.imwrite('output2.png',final_image)
 
 
 
