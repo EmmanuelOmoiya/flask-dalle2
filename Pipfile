@@ -50,6 +50,7 @@ requests = "*"
 pillow = "*"
 python-dotenv = "*"
 imgbbpy = "*"
+openai = "*"
 
 [dev-packages]
 

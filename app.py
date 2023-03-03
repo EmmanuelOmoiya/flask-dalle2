@@ -12,10 +12,9 @@ import openai
 import os
 import datetime
 
-os.environ['IMGBB_API_KEY'] = 'xx'
-os.environ['OPENAI_API_KEY'] = 'xx'
-#openai.organization = "Personal"
-openai.api_key = 'xx'
+#os.environ['IMGBB_API_KEY'] = 'xx'
+#os.environ['OPENAI_API_KEY'] = 'xx'
+
 
 
 app = Flask(__name__)
@@ -23,6 +22,9 @@ load_dotenv()
 # Set the OpenAI API endpoint and your API key
 API_ENDPOINT = "https://api.openai.com/v1/images/generations"
 API_KEY = os.getenv('APIKEY')
+
+#openai.organization = "Personal"
+openai.api_key = API_KEY
 
 async def upload(pic):
     client = imgbbpy.AsyncClient(os.getenv('IMGBB_API_KEY'))
