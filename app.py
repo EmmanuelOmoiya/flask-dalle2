@@ -11,7 +11,7 @@ import imgbbpy
 import openai
 import os
 import datetime
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 
 #os.environ['IMGBB_API_KEY'] = 'xx'
 #os.environ['OPENAI_API_KEY'] = 'xx'
@@ -20,6 +20,9 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
+
 load_dotenv()
 # Set the OpenAI API endpoint and your API key
 API_ENDPOINT = "https://api.openai.com/v1/images/generations"
@@ -35,6 +38,7 @@ async def upload(pic):
     return image.url
 
 @app.route('/generate-image', methods=['POST'])
+@cross_origin()
 def outpaint_image():
     # Get the user's text input from the request
     user_input = request.json.get('text')
