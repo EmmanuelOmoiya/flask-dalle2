@@ -213,7 +213,10 @@ def outpaint_image():
     url = asyncio.run(upload(date_time_str))  
     # Return the combined image as a response
     #return jsonify({'image': str(img_bytes)})
-    return jsonify({'url': url})
+
+    response = jsonify({'url': url})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 
 @app.route('/generate-image-old', methods=['POST'])
