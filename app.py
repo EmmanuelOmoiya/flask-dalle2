@@ -49,12 +49,11 @@ def outpaint_image():
 
     input_image = cv2.imread("input_generated.png")
     input_image = cv2.cvtColor(input_image, cv2.COLOR_RGB2RGBA)
-    input_image = cv2.resize(input_image, (1024, 1024),
-              interpolation = cv2.INTER_LINEAR)
+
     
-    chunk_width = int(input_image.shape[1]/3)
+    chunk_width = 341
     # Storing the first chunk
-    first_chunk = input_image[:,0:chunk_width:,]
+    first_chunk = input_image[:,0:chunk_width,]
 
     # Second and third chunk
     partial_image = input_image[:,chunk_width:1024,]
@@ -62,7 +61,7 @@ def outpaint_image():
     # Adding mask as new chunk and merging into 2nd and 3rd chunk and saving it
     last_chunk_image = np.zeros((1024,chunk_width,4))
     out_image_new = np.concatenate((partial_image,last_chunk_image),axis=1)
-    out_image_new[chunk_width:,:3] = 0
+    out_image_new[:,683:,3] = 0
     cv2.imwrite('partial.png',out_image_new)
 
     # Sending it to OPEN AI to fill mask image
@@ -84,8 +83,6 @@ def outpaint_image():
     # Merging first chunk to output image
 
     second_part = cv2.cvtColor(second_part, cv2.COLOR_RGB2RGBA)
-    second_part = cv2.resize(second_part, (1024, 1024),
-                interpolation = cv2.INTER_LINEAR)
     #final_image = np.concatenate((first_chunk,second_part),axis=1)
     final_image = np.hstack((first_chunk,second_part))
     cv2.imwrite('outpaint1.png',final_image)
@@ -95,16 +92,16 @@ def outpaint_image():
 
     final_image = cv2.imread('outpaint1.png')
     final_image = cv2.cvtColor(final_image, cv2.COLOR_RGB2RGBA)
-    final_image_chunk_size = int(final_image.shape[1]/2)
+    final_image_chunk_size = 682
 
     # Storing the first chunk
-    pre_chunk = final_image[:,0:final_image_chunk_size:,]
+    pre_chunk = final_image[:,0:final_image_chunk_size,]
 
     # Second chunk
-    post_chunk = final_image[:,final_image_chunk_size:final_image.shape[1],]
+    post_chunk = final_image[:,final_image_chunk_size:1365,]
     last_chunk_image = np.zeros((1024,1024-final_image_chunk_size-1,4))
     out_image_new = np.concatenate((post_chunk,last_chunk_image),axis=1)
-    out_image_new[final_image_chunk_size:,:3] = 0
+    out_image_new[:,final_image_chunk_size:,:3] = 0
     cv2.imwrite('partial.png',out_image_new)
 
 
@@ -142,7 +139,7 @@ def outpaint_image():
     post_chunk = final_image[:,final_image_chunk_size:final_image.shape[1],]
     last_chunk_image = np.zeros((1024,1024-final_image_chunk_size,4))
     out_image_new = np.concatenate((post_chunk,last_chunk_image),axis=1)
-    out_image_new[final_image_chunk_size:,:3] = 0
+    out_image_new[:,final_image_chunk_size:,:3] = 0
     cv2.imwrite('partial.png',out_image_new)
 
 
@@ -174,8 +171,10 @@ def outpaint_image():
     initial_part = final_image[:,0:300,]  
     last_part = final_image[:,1500:1877,]
     mid_mask = np.zeros((1024,347,4))
+    
 
     stiched_image = np.hstack((last_part,mid_mask,initial_part))
+    stiched_image[:,377:724,:3] = 0
     cv2.imwrite('partial.png',stiched_image)
 
     response = openai.Image.create_edit(
@@ -197,10 +196,6 @@ def outpaint_image():
     filled_masked = masked_image[:,377:724,]
 
     final_image = np.hstack((filled_masked, final_image))
-
-    temp = user_input.replace(" ","")
-    # Set the filename based on the user input
-    filename = f"combined_image-{temp}.png"
     
 
     dt_now = datetime.datetime.now()
