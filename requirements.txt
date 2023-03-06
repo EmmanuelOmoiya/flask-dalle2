@@ -7,3 +7,5 @@ flask
 python-dotenv
 imgbbpy
 flask-cors
+uvicorn[standard]
+fastapi
