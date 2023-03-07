@@ -51,6 +51,7 @@ pillow = "*"
 python-dotenv = "*"
 imgbbpy = "*"
 openai = "*"
+uvicorn = "*"
 
 [dev-packages]
 

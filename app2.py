@@ -37,11 +37,15 @@ app.add_middleware(
 )
 
 
-
 load_dotenv()
 # Set the OpenAI API endpoint and your API key
 API_ENDPOINT = "https://api.openai.com/v1/images/generations"
 API_KEY = os.getenv('APIKEY')
+
+#os.environ['IMGBB_API_KEY'] = 'xx'
+#os.environ['OPENAI_API_KEY'] = 'xx'
+#openai.organization = "Personal"
+openai.api_key = API_KEY
 
 async def upload(pic):
     client = imgbbpy.AsyncClient(os.getenv('IMGBB_API_KEY'))
@@ -49,13 +53,16 @@ async def upload(pic):
     print(image.url)
     return image.url
 
+@app.get("/generateimage2")
+async def create_item():
+    return ({'url': 'https://panoraven.com/en/embed/PYKxs5WSfX'})
 
-@app.post("/generateimage1/")
+@app.post("/generateimage1")
 async def create_item(item: Item):
     return ({'url': 'https://panoraven.com/en/embed/PYKxs5WSfX'})
 
 
-@app.post("/generate-image/")
+@app.post("/generate-image")
 def generateimage1(item: Item):
     # Get the user's text input from the request
     user_input = item.text

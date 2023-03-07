@@ -7,7 +7,10 @@ Pipfile.lock
 *.jpg
 # C extensions
 *.so
-
+.vscode/
+.env
+*.png
+.vscode/launch.json
 # Distribution / packaging
 .Python
 build/

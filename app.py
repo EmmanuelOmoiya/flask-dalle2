@@ -25,8 +25,13 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 load_dotenv()
 # Set the OpenAI API endpoint and your API key
-API_ENDPOINT = "https://api.openai.com/v1/images/generations"
-API_KEY = os.getenv('APIKEY')
+#API_ENDPOINT = "https://api.openai.com/v1/images/generations"
+#API_KEY = os.getenv('APIKEY')
+
+os.environ['IMGBB_API_KEY'] = '1398e97252f7e63bc21a68e6f6fbcc0e'
+os.environ['OPENAI_API_KEY'] = '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'
+#openai.organization = "Personal"
+openai.api_key = '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'
 
 #openai.organization = "Personal"
 openai.api_key = API_KEY
