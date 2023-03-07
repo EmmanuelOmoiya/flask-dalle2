@@ -245,5 +245,6 @@ def generateimage1(item: Item):
     response = ({'url': url})
     return response
 
-
+   if __name__ == '__main__':
+    app.run(debug=True)
 
