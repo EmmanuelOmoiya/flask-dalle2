@@ -9,3 +9,4 @@ imgbbpy
 flask-cors
 uvicorn[standard]
 fastapi
+gunicorn==20.1.0
