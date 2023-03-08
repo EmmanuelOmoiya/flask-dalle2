@@ -40,11 +40,11 @@ app.add_middleware(
 load_dotenv()
 # Set the OpenAI API endpoint and your API key
 #API_ENDPOINT = "https://api.openai.com/v1/images/generations"
-#API_KEY = os.getenv('APIKEY')
+API_KEY = os.getenv('APIKEY')
 
 os.environ['IMGBB_API_KEY'] = 'xx'
 os.environ['OPENAI_API_KEY'] = 'xx'
-openai.organization = "Personal"
+#openai.organization = "Personal"
 openai.api_key = API_KEY
 
 async def upload(pic):
